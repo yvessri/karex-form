@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KareX — ลงทะเบียนสถานบริบาล</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Prompt', 'Sarabun', sans-serif;
+    background: #F4F7F5;
+    color: #1a2e24;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: #1a6b4a;
+    padding: 20px 24px 24px;
+    color: white;
+  }
+
+  .header-brand {
+    font-size: 13px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-top: 4px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    margin-top: 16px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: #6ee4a8;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .form-body {
+    padding: 24px 20px 100px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #3a5a46;
+    margin-bottom: 7px;
+    letter-spacing: 0.3px;
+  }
+
+  label .required {
+    color: #e05c5c;
+    margin-left: 3px;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #d0e4d8;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    background: white;
+    color: #1a2e24;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+  }
+
+  input:focus, textarea:focus {
+    border-color: #1a6b4a;
+    box-shadow: 0 0 0 3px rgba(26,107,74,0.1);
+  }
+
+  input.error, textarea.error {
+    border-color: #e05c5c;
+  }
+
+  textarea {
+    resize: none;
+    height: 90px;
+    line-height: 1.6;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #7a9e88;
+    margin-top: 5px;
+  }
+
+  .error-msg {
+    font-size: 12px;
+    color: #e05c5c;
+    margin-top: 5px;
+    display: none;
+  }
+
+  .error-msg.show {
+    display: block;
+  }
+
+  .upload-area {
+    border: 1.5px dashed #b0d4be;
+    border-radius: 10px;
+    background: white;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .upload-area:hover {
+    border-color: #1a6b4a;
+    background: #f0faf4;
+  }
+
+  .upload-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .upload-label {
+    font-size: 14px;
+    color: #3a5a46;
+    font-weight: 500;
+  }
+
+  .upload-sub {
+    font-size: 12px;
+    color: #7a9e88;
+    margin-top: 4px;
+  }
+
+  .preview-img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+    max-height: 180px;
+    object-fit: cover;
+  }
+
+  .divider {
+    height: 1px;
+    background: #ddeee5;
+    margin: 24px 0;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a6b4a;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #ddeee5;
+    padding: 14px 20px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #1a6b4a;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+
+  .submit-btn:hover { background: #155a3d; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { background: #a0c4b2; cursor: not-allowed; }
+
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: #e8f7ee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+  }
+
+  .success-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a6b4a;
+    margin-bottom: 10px;
+  }
+
+  .success-sub {
+    font-size: 14px;
+    color: #7a9e88;
+    line-height: 1.7;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">KareX</div>
+  <div class="header-title">ลงทะเบียนสถานบริบาล</div>
+  <div class="header-sub">กรอกข้อมูลเพื่อแสดงในแพลตฟอร์ม</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress" style="width: 0%"></div>
+  </div>
+</div>
+
+<div class="form-body" id="formBody">
+
+  <div class="section-label">ข้อมูลสถานบริบาล</div>
+
+  <div class="field">
+    <label>ชื่อสถานบริบาล <span class="required">*</span></label>
+    <input type="text" id="name" placeholder="เช่น สถานบริบาลผู้สูงอายุสุขใจ" oninput="updateProgress()">
+    <div class="error-msg" id="name-err">กรุณากรอกชื่อสถานบริบาล</div>
+  </div>
+
+  <div class="field">
+    <label>ที่อยู่ <span class="required">*</span></label>
+    <textarea id="address" placeholder="เลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์" oninput="updateProgress()"></textarea>
+    <div class="error-msg" id="address-err">กรุณากรอกที่อยู่</div>
+  </div>
+
+  <div class="field">
+    <label>เบอร์โทรศัพท์ <span class="required">*</span></label>
+    <input type="tel" id="phone" placeholder="0XX-XXX-XXXX" maxlength="12" oninput="formatPhone(this); updateProgress()">
+    <div class="error-msg" id="phone-err">กรุณากรอกเบอร์โทรให้ถูกต้อง</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">รายละเอียดเพิ่มเติม</div>
+
+  <div class="field">
+    <label>จำนวนผู้สูงอายุที่รับดูแล <span class="required">*</span></label>
+    <input type="number" id="capacity" placeholder="เช่น 20" min="1" max="500" oninput="updateProgress()">
+    <div class="hint">จำนวนสูงสุดที่รับได้ในปัจจุบัน</div>
+    <div class="error-msg" id="capacity-err">กรุณากรอกจำนวน</div>
+  </div>
+
+  <div class="field">
+    <label>รูปภาพสถานที่</label>
+    <div class="upload-area" id="uploadArea">
+      <input type="file" accept="image/*" id="photoInput" onchange="previewPhoto(this)">
+      <div class="upload-icon">📷</div>
+      <div class="upload-label">แตะเพื่อเลือกรูปภาพ</div>
+      <div class="upload-sub">JPG, PNG ขนาดไม่เกิน 5MB</div>
+    </div>
+    <img id="previewImg" class="preview-img" alt="preview">
+  </div>
+
+</div>
+
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">✓</div>
+  <div class="success-title">ลงทะเบียนสำเร็จแล้ว!</div>
+  <div class="success-sub">ข้อมูลสถานบริบาลของคุณ<br>จะปรากฏบนแพลตฟอร์ม KareX ภายใน 24 ชั่วโมง</div>
+</div>
+
+<div class="footer" id="footer">
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">ส่งข้อมูล</button>
+</div>
+
+<script>
+function updateProgress() {
+  const fields = ['name', 'address', 'phone', 'capacity'];
+  const filled = fields.filter(id => document.getElementById(id).value.trim() !== '').length;
+  document.getElementById('progress').style.width = (filled / fields.length * 100) + '%';
+}
+
+function formatPhone(input) {
+  let v = input.value.replace(/\D/g, '');
+  if (v.length > 3 && v.length <= 6) v = v.slice(0,3) + '-' + v.slice(3);
+  else if (v.length > 6) v = v.slice(0,3) + '-' + v.slice(3,6) + '-' + v.slice(6,10);
+  input.value = v;
+}
+
+function previewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('previewImg');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('uploadArea').style.paddingBottom = '0';
+  };
+  reader.readAsDataURL(file);
+}
+
+function validate() {
+  let valid = true;
+  const checks = [
+    { id: 'name', errId: 'name-err', check: v => v.trim() !== '' },
+    { id: 'address', errId: 'address-err', check: v => v.trim() !== '' },
+    { id: 'phone', errId: 'phone-err', check: v => v.replace(/\D/g,'').length >= 9 },
+    { id: 'capacity', errId: 'capacity-err', check: v => v.trim() !== '' && parseInt(v) > 0 },
+  ];
+  checks.forEach(({ id, errId, check }) => {
+    const el = document.getElementById(id);
+    const errEl = document.getElementById(errId);
+    if (!check(el.value)) {
+      el.classList.add('error');
+      errEl.classList.add('show');
+      valid = false;
+    } else {
+      el.classList.remove('error');
+      errEl.classList.remove('show');
+    }
+  });
+  return valid;
+}
+
+function submitForm() {
+  if (!validate()) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'กำลังส่งข้อมูล...';
+  setTimeout(() => {
+    document.getElementById('formBody').style.display = 'none';
+    document.getElementById('footer').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+  }, 1200);
+}
+</script>
+</body>
+</html>
